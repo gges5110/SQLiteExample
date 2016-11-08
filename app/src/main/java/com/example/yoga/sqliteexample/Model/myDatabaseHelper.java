@@ -7,8 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by YOGA on 11/5/2016.
@@ -199,7 +205,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
      * getting all people
      * */
     public List<Person> getAllPeople() {
-        List<Person> tags = new ArrayList<>();
+        List<Person> p = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + Person.PersonEntry.TABLE_NAME;
 
         Log.e(LOG, selectQuery);
@@ -215,10 +221,77 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
                         c.getString(c.getColumnIndex(Person.PersonEntry.COLUMN_NAME_EMAIL)));
 
                 // adding to tags list
-                tags.add(t);
+                p.add(t);
             } while (c.moveToNext());
         }
-        return tags;
+        return p;
+    }
+
+    /**
+     *      SELECT * FROM person_table WHERE person_id = 1;
+     */
+
+    public Person getPerson(long person_id) {
+        Person p = new Person();
+        String selectQuery = "SELECT  * FROM " + Person.PersonEntry.TABLE_NAME +
+                " WHERE " + Person.PersonEntry._ID + " = " + String.valueOf(person_id);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null)
+            c.moveToFirst();
+
+        p.setEmail(c.getString(c.getColumnIndex(Person.PersonEntry.COLUMN_NAME_EMAIL)));
+        p.setName(c.getString(c.getColumnIndex(Person.PersonEntry.COLUMN_NAME_NAME)));
+        p.setId(c.getInt(c.getColumnIndex(Person.PersonEntry._ID)));
+
+        return p;
+    }
+
+    public long createBill(Bill bill) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+        ContentValues values = new ContentValues();
+        values.put(Bill.BillEntry.COLUMN_NAME_DATE, dateFormat.format(bill.getDate()));
+        values.put(Bill.BillEntry.COLUMN_NAME_PLACE, bill.getPlace());
+        values.put(Bill.BillEntry.COLUMN_NAME_PAYER, bill.getPayer());
+
+        return db.insert(Bill.BillEntry.TABLE_NAME, null, values);
+    }
+
+    public List<Bill> getAllBills() {
+        List<Bill> billList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Bill.BillEntry.TABLE_NAME;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Bill b = new Bill();
+
+                b.setId(c.getInt(c.getColumnIndex(Bill.BillEntry._ID)));
+                b.setPayer(c.getInt(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_PAYER)));
+                b.setPlace(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_PLACE)));
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
+                Date dt; //replace 4 with the column index
+                try {
+                    dt = sdf.parse(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_DATE)));
+                    b.setDate(dt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                // adding to tags list
+                billList.add(b);
+            } while (c.moveToNext());
+        }
+
+        return billList;
     }
 
 }

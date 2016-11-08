@@ -18,11 +18,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.yoga.sqliteexample.Model.Bill;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.Model.myDatabaseHelper;
 import com.example.yoga.sqliteexample.fragments.AddBillFragment;
 import com.example.yoga.sqliteexample.fragments.AddItemFragment;
 import com.example.yoga.sqliteexample.fragments.AddPersonFragment;
+import com.example.yoga.sqliteexample.fragments.ListBillFragment;
 import com.example.yoga.sqliteexample.fragments.ListPersonFragment;
 
 import java.util.List;
@@ -30,7 +32,9 @@ import java.util.List;
 public class MainPage extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
                     AddPersonFragment.AddPersonInterface,
-                    ListPersonFragment.ListPersonInterface {
+                    ListPersonFragment.ListPersonInterface,
+                    AddBillFragment.AddBillInterface,
+                    ListBillFragment.ListBillInterface {
 
     // Database Helper
     myDatabaseHelper db;
@@ -120,6 +124,10 @@ public class MainPage extends AppCompatActivity
                 fragment = new ListPersonFragment();
                 title = "List Person";
                 break;
+            case R.id.nav_list_bill:
+                fragment = new ListBillFragment();
+                title = "List Bill";
+                break;
 
         }
 
@@ -147,5 +155,20 @@ public class MainPage extends AppCompatActivity
     @Override
     public List<Person> getAllPeople() {
         return db.getAllPeople();
+    }
+
+    @Override
+    public Person getPerson(long person_id) {
+        return db.getPerson(person_id);
+    }
+
+    @Override
+    public long createBill(Bill bill) {
+        return db.createBill(bill);
+    }
+
+    @Override
+    public List<Bill> getAllBills() {
+        return db.getAllBills();
     }
 }

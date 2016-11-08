@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.yoga.sqliteexample.Model.Bill;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
 
@@ -19,14 +20,16 @@ import java.util.List;
 /**
  * Created by YOGA on 11/7/2016.
  */
-public class ListPersonFragment extends Fragment {
-    ListView listView_list_person;
+public class ListBillFragment extends Fragment {
+    private ListView listView_list_bill;
 
-    public interface ListPersonInterface {
-        List<Person> getAllPeople();
+    public interface ListBillInterface {
+        List<Bill> getAllBills();
+        Person getPerson(long person_id);
     }
 
-    ListPersonInterface mListener;
+
+    ListBillInterface mListener;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -35,7 +38,7 @@ public class ListPersonFragment extends Fragment {
         if (context instanceof Activity){
             activity = (Activity) context;
             try {
-                mListener = (ListPersonInterface) activity;
+                mListener = (ListBillInterface) activity;
             } catch (ClassCastException e) {
                 throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
             }
@@ -45,26 +48,27 @@ public class ListPersonFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View myView = inflater.inflate(R.layout.fragment_list_person, container, false);
-        listView_list_person = (ListView) myView.findViewById(R.id.listView_list_person);
-        List<Person> personList = mListener.getAllPeople();
+        View myView = inflater.inflate(R.layout.fragment_list_bill, container, false);
+        listView_list_bill = (ListView) myView.findViewById(R.id.listView_list_bill);
+        List<Bill> billList = mListener.getAllBills();
+        List<String> billStringList = new ArrayList<>();
 
-        ArrayList<String> personStringList = new ArrayList<>();
-        for (int i = 0; i < personList.size(); ++i) {
-            Person p = personList.get(i);
-            personStringList.add(p.getName() + ", " + p.getEmail());
+        for (int i = 0; i < billList.size(); ++i) {
+            Bill b = billList.get(i);
+            Person p = mListener.getPerson(b.getPayer());
+            billStringList.add(b.getPlace() + ", payer = " + p.getName() + ", at " + b.getDate().toString());
         }
 
         // Create The Adapter with passing ArrayList as 3rd parameter
         ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<>(myView.getContext(), R.layout.listview_layout, personStringList);
-        // Set The Adapter
-        listView_list_person.setAdapter(arrayAdapter);
+                new ArrayAdapter<>(myView.getContext(), R.layout.listview_layout, billStringList);
+
+
+        listView_list_bill.setAdapter(arrayAdapter);
 
         return myView;
     }

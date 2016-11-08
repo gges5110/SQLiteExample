@@ -2,26 +2,31 @@ package com.example.yoga.sqliteexample.Model;
 
 import android.provider.BaseColumns;
 
+import java.util.Date;
+
 /**
  * Created by YOGA on 11/5/2016.
  */
 
 public final class Bill {
-    private int id;
-    private String place, date, payer;
+    private int id, payer;
+    private String place;
+    private Date date;
 
-    public Bill(int id, String place, String date, String payer) {
+    public Bill(int id, String place, Date date, int payer) {
         this.id = id;
         this.place = place;
         this.date = date;
         this.payer = payer;
     }
 
-    public String getPayer() {
+    public Bill() {}
+
+    public int getPayer() {
         return payer;
     }
 
-    public void setPayer(String payer) {
+    public void setPayer(int payer) {
         this.payer = payer;
     }
 
@@ -41,11 +46,11 @@ public final class Bill {
         this.place = place;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

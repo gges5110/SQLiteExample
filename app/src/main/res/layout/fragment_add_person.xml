@@ -7,7 +7,9 @@
         android:text="Add Person Fragment!"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView5" />
+        android:id="@+id/textView5"
+        android:textSize="18sp"
+        android:padding="5sp" />
 
     <EditText
         android:layout_width="match_parent"

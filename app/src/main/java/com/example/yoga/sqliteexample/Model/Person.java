@@ -34,9 +34,7 @@ public final class Person {
         this.email = email;
     }
 
-    public Person() {
-
-    }
+    public Person() {}
 
     public Person(int id, String name, String email) {
         this.id = id;
