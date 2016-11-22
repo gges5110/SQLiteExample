@@ -14,6 +14,8 @@ public final class Item {
         this.price = price;
     }
 
+    public Item() {}
+
     private int price, id;
 
     public int getPrice() {

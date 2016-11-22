@@ -1,4 +1,4 @@
-package com.example.yoga.sqliteexample.fragments;
+package com.example.yoga.sqliteexample.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;

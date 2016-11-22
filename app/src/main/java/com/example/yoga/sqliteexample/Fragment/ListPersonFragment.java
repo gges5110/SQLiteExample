@@ -1,15 +1,19 @@
-package com.example.yoga.sqliteexample.fragments;
+package com.example.yoga.sqliteexample.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.yoga.sqliteexample.Adapter.PersonRecyclerViewAdapter;
+import com.example.yoga.sqliteexample.Decoration.DividerItemDecoration;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
 
@@ -20,7 +24,7 @@ import java.util.List;
  * Created by YOGA on 11/7/2016.
  */
 public class ListPersonFragment extends Fragment {
-    ListView listView_list_person;
+    private RecyclerView mRecyclerView;
 
     public interface ListPersonInterface {
         List<Person> getAllPeople();
@@ -51,21 +55,35 @@ public class ListPersonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.fragment_list_person, container, false);
-        listView_list_person = (ListView) myView.findViewById(R.id.listView_list_person);
+        drawVerticalLines(myView);
+
         List<Person> personList = mListener.getAllPeople();
 
-        ArrayList<String> personStringList = new ArrayList<>();
+        List<String> emailList = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
         for (int i = 0; i < personList.size(); ++i) {
             Person p = personList.get(i);
-            personStringList.add(p.getName() + ", " + p.getEmail());
+            emailList.add(p.getEmail());
+            nameList.add(p.getName());
         }
 
-        // Create The Adapter with passing ArrayList as 3rd parameter
-        ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<>(myView.getContext(), R.layout.listview_layout, personStringList);
-        // Set The Adapter
-        listView_list_person.setAdapter(arrayAdapter);
+        RecyclerView.Adapter mAdapter = new PersonRecyclerViewAdapter(getActivity(), nameList, emailList);
+        mRecyclerView.setAdapter(mAdapter);
 
         return myView;
+    }
+
+    public void drawVerticalLines(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.listView_list_person);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        //add ItemDecoration
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
     }
 }

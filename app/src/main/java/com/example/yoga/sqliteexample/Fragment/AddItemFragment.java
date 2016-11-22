@@ -1,4 +1,4 @@
-package com.example.yoga.sqliteexample.fragments;
+package com.example.yoga.sqliteexample.Fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,6 +12,12 @@ import com.example.yoga.sqliteexample.R;
  * Created by YOGA on 11/7/2016.
  */
 public class AddItemFragment extends Fragment {
+
+
+
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

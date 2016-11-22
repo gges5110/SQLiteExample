@@ -228,7 +228,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *      SELECT * FROM person_table WHERE person_id = 1;
+     *      SELECT * FROM person_table WHERE person_id = long;
      */
 
     public Person getPerson(long person_id) {
@@ -292,6 +292,15 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         }
 
         return billList;
+    }
+
+    public long createItem(Item item) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Item.ItemEntry.COLUMN_NAME_PRICE, item.getPrice());
+
+        return db.insert(Item.ItemEntry.TABLE_NAME, null, values);
     }
 
 }
