@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.yoga.sqliteexample.Adapter.BillRecyclerViewAdapter;
 import com.example.yoga.sqliteexample.Fragment.*;
@@ -153,18 +154,18 @@ public class MainPage extends AppCompatActivity
         String title = getString(R.string.app_name);
 
         switch (viewId) {
-            case R.id.nav_add_person:
-                fragment = new AddPersonFragment();
-                title  = "Add Person";
-                break;
-            case R.id.nav_add_bill:
-                fragment = new AddBillFragment();
-                title = "Add Bill";
-                break;
-            case R.id.nav_add_item:
-                // fragment = new AddItemFragment();
-                // title = "Add item";
-                break;
+//            case R.id.nav_add_person:
+//                fragment = new AddPersonFragment();
+//                title  = "Add Person";
+//                break;
+//            case R.id.nav_add_bill:
+//                fragment = new AddBillFragment();
+//                title = "Add Bill";
+//                break;
+//            case R.id.nav_add_item:
+//                // fragment = new AddItemFragment();
+//                // title = "Add item";
+//                break;
             case R.id.nav_list_person:
                 fragment = new ListPersonFragment();
                 title = "List Person";
@@ -229,5 +230,44 @@ public class MainPage extends AppCompatActivity
 
         actionBar.setTitle("Bill Details");
         displayHomeIcon(false);
+    }
+
+    private void setAddBillFragment() {
+        AddBillFragment addBillFragment = new AddBillFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, addBillFragment);
+        ft.addToBackStack("List Bill");
+        ft.commit();
+
+        actionBar.setTitle("Add Bill");
+        displayHomeIcon(false);
+    }
+
+    private void setAddPersonFragment() {
+        AddPersonFragment addPersonFragment = new AddPersonFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, addPersonFragment);
+        ft.addToBackStack("List Person");
+        ft.commit();
+
+        actionBar.setTitle("Add Person");
+        displayHomeIcon(false);
+    }
+
+    public void floatingActionButtonOnClick(View view) {
+        Log.d(TAG, "floatingActionButtonOnClick");
+        // Check which fragment it is in.
+        Fragment f = getFragmentManager().findFragmentById(R.id.content_frame);
+        if (f instanceof ListBillFragment) {
+            Log.d(TAG, "ListBillFragment");
+            // Replace current fragment with AddBillFragment
+            setAddBillFragment();
+
+        } else if (f instanceof ListPersonFragment) {
+            Log.d(TAG, "ListPersonFragment");
+            // Replace current fragment with AddPersonFragment
+            setAddPersonFragment();
+        }
+
     }
 }

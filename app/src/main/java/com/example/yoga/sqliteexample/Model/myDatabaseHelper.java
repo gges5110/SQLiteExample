@@ -76,6 +76,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     /*
     CREATE TABLE item_table (
         item_id     INTEGER PRIMARY KEY,
+        item_name   TEXT,
         price       INTEGER
     );
      */
@@ -83,6 +84,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_ITEM =
             CREATE_TABLE + Item.ItemEntry.TABLE_NAME + " (" +
                     Item.ItemEntry._ID + PRIMARY_KEY +
+                    Item.ItemEntry.COLUMN_NAME_ITEM_NAME + TEXT_TYPE + COMMA_SEP +
                     Item.ItemEntry.COLUMN_NAME_PRICE + INTEGER_TYPE + " );";
 
     /*
