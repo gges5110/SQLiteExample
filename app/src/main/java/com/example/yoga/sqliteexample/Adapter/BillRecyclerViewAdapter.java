@@ -9,10 +9,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yoga.sqliteexample.Fragment.ListBillFragment;
+import com.example.yoga.sqliteexample.Model.Bill;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -20,33 +25,49 @@ import java.util.List;
  */
 
 public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerViewAdapter.ViewHolder> {
+    private List<Bill> billList;
     private List<String> placeList, dateList;
     private List<Person> payerList;
     private Activity activity;
 
 
     public interface BillRecyclerInterface {
-        void setBillDetailFragment();
+        void setBillDetailFragment(Bill bill, Person payer);
     }
 
-    public BillRecyclerViewAdapter(Activity activity, List<String> placeList, List<String> dateList, List<Person> payerList) {
+    public BillRecyclerViewAdapter(Activity activity, List<Bill> billList, List<Person> payerList) {
         this.activity = activity;
-        this.placeList = placeList;
-        this.dateList = dateList;
+        this.billList = billList;
         this.payerList = payerList;
+
+        placeList = new ArrayList<>();
+        dateList = new ArrayList<>();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+
+        for (int i = 0; i < billList.size(); ++i) {
+            Bill b = billList.get(i);
+            placeList.add(b.getPlace());
+            dateList.add(dateFormat.format(b.getDate()));
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mTitle;
         public TextView textView_line1, textView_line2, textView_line3;
+        private List<Bill> billList;
+        private List<Person> payerList;
         private Activity activity;
         private BillRecyclerInterface mListener;
 
-        public ViewHolder(LinearLayout v, Activity activity) {
+
+        public ViewHolder(LinearLayout v, Activity activity, List<Bill> billList, List<Person> payerList) {
             super(v);
             v.setOnClickListener(this);
 
             this.activity = activity;
+            this.billList = billList;
+            this.payerList = payerList;
             try {
                 mListener = (BillRecyclerInterface) activity;
             } catch (ClassCastException e) {
@@ -62,7 +83,7 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
         @Override
         public void onClick(View v) {
             // Toast.makeText(activity, "Clicked", Toast.LENGTH_SHORT).show();
-            mListener.setBillDetailFragment();
+            mListener.setBillDetailFragment(billList.get(getAdapterPosition()), payerList.get(getAdapterPosition()));
         }
     }
 
@@ -74,13 +95,13 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listview_layout, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder((LinearLayout) v, activity);
+        ViewHolder vh = new ViewHolder((LinearLayout) v, activity, billList, payerList);
         return vh;
     }
 
     @Override
     public int getItemCount() {
-        return placeList.size();
+        return billList.size();
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -88,10 +109,9 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
     public void onBindViewHolder(BillRecyclerViewAdapter.ViewHolder holder, int position) {
         char c = Character.toUpperCase(placeList.get(position).charAt(0));
         holder.mTitle.setText(String.valueOf(c));
+
         holder.textView_line1.setText(placeList.get(position));
         holder.textView_line2.setText(dateList.get(position));
         holder.textView_line3.setText(payerList.get(position).getName());
     }
-
-
 }

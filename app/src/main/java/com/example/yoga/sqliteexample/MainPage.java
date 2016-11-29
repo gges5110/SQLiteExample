@@ -177,6 +177,7 @@ public class MainPage extends AppCompatActivity
         }
 
         if (fragment != null) {
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
@@ -221,8 +222,10 @@ public class MainPage extends AppCompatActivity
     }
 
     @Override
-    public void setBillDetailFragment() {
+    public void setBillDetailFragment(Bill bill, Person payer) {
         BillDetailFragment billDetailFragment = new BillDetailFragment();
+        billDetailFragment.setBill(bill);
+        billDetailFragment.setPayer(payer);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, billDetailFragment);
         ft.addToBackStack("List Bill");
@@ -235,6 +238,7 @@ public class MainPage extends AppCompatActivity
     private void setAddBillFragment() {
         AddBillFragment addBillFragment = new AddBillFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.content_frame, addBillFragment);
         ft.addToBackStack("List Bill");
         ft.commit();

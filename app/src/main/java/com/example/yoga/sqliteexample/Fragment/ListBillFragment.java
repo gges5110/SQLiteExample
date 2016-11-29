@@ -35,8 +35,8 @@ public class ListBillFragment extends Fragment {
         Person getPerson(long person_id);
     }
 
-
     ListBillInterface mListener;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -63,23 +63,15 @@ public class ListBillFragment extends Fragment {
 
         drawVerticalLines(myView);
 
-        // specify an adapter (see also next example)
+        List<Person> personList = new ArrayList<>();
         List<Bill> billList = mListener.getAllBills();
-        List<String> placeList = new ArrayList<>();
-        List<String> dateList = new ArrayList<>();
-        List<Person> payerList = new ArrayList<>();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-
-        for (int i = 0; i < billList.size(); ++i) {
-            Bill b = billList.get(i);
-            Person p = mListener.getPerson(b.getPayer());
-            placeList.add(b.getPlace());
-            dateList.add(dateFormat.format(b.getDate()));
-            payerList.add(p);
+        for (Bill b: billList) {
+            personList.add(mListener.getPerson(b.getPayer()));
         }
 
-        mAdapter = new BillRecyclerViewAdapter(getActivity(), placeList, dateList, payerList);
+        // specify an adapter
+        mAdapter = new BillRecyclerViewAdapter(getActivity(), billList, personList);
         mRecyclerView.setAdapter(mAdapter);
 
         return myView;
@@ -98,6 +90,5 @@ public class ListBillFragment extends Fragment {
         //add ItemDecoration
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
     }
-
 
 }

@@ -210,7 +210,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         List<Person> p = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + Person.PersonEntry.TABLE_NAME;
 
-        Log.e(LOG, selectQuery);
+        Log.d(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);

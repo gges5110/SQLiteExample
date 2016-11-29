@@ -27,21 +27,21 @@
             android:id="@+id/textView_line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:padding="0sp"
             android:text="Place" />
         <TextView
             android:id="@+id/textView_line2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:padding="0sp"
             android:text="Date" />
         <TextView
             android:id="@+id/textView_line3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:padding="0sp"
             android:text="Payer" />
     </LinearLayout>
