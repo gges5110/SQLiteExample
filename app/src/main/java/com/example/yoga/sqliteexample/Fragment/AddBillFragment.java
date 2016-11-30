@@ -21,24 +21,26 @@ import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by YOGA on 11/6/2016.
  */
-public class AddBillFragment extends Fragment implements OnDateSetListener {
+public class AddBillFragment extends Fragment implements OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     Spinner spinner_add_bill;
-    Button button_add_bill_pickdate, button_add_bill_add;
+    Button button_add_bill_pickdate, button_add_bill_add, button_add_bill_picktime;
     EditText editText_add_bill;
-    private Date date = null;
+    private Date date = null, time = null;
     List<Person> personList;
     int payer_id = -1;
-
 
     public interface AddBillInterface {
         List<Person> getAllPeople();
@@ -71,6 +73,7 @@ public class AddBillFragment extends Fragment implements OnDateSetListener {
         final View myView = inflater.inflate(R.layout.fragment_add_bill, container, false);
         spinner_add_bill = (Spinner) myView.findViewById(R.id.spinner_add_bill);
         button_add_bill_pickdate = (Button) myView.findViewById(R.id.button_add_bill_pickdate);
+        button_add_bill_picktime = (Button) myView.findViewById(R.id.button_add_bill_picktime);
         button_add_bill_add = (Button) myView.findViewById(R.id.button_add_bill_add);
         editText_add_bill = (EditText) myView.findViewById(R.id.editText_add_bill);
 
@@ -84,9 +87,7 @@ public class AddBillFragment extends Fragment implements OnDateSetListener {
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(myView.getContext(), android.R.layout.simple_spinner_item, personStringList);
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner_add_bill.setAdapter(adapter);
         spinner_add_bill.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -114,6 +115,21 @@ public class AddBillFragment extends Fragment implements OnDateSetListener {
             }
         });
 
+        button_add_bill_picktime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                TimePickerDialog tpd = TimePickerDialog.newInstance(
+                        AddBillFragment.this,
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        now.get(Calendar.SECOND),
+                        true
+                );
+                tpd.show(getFragmentManager(), "Timepickerdialog");
+            }
+        });
+
         button_add_bill_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,11 +139,14 @@ public class AddBillFragment extends Fragment implements OnDateSetListener {
                     imm.hideSoftInputFromWindow(myView.getWindowToken(), 0);
                 }
 
-                if (date == null || payer_id == -1) {
+                if (date == null || time == null || payer_id == -1 || editText_add_bill.getText().toString().equals("")) {
                     Toast.makeText(myView.getContext(), "Please select date and payer.", Toast.LENGTH_SHORT).show();
                 } else {
                     Bill bill = new Bill();
                     bill.setPlace(editText_add_bill.getText().toString());
+                    date.setHours(time.getHours());
+                    date.setMinutes(time.getMinutes());
+                    date.setSeconds(time.getSeconds());
                     bill.setDate(date);
                     bill.setPayer(payer_id);
                     if(mListener.createBill(bill) == -1) {
@@ -147,6 +166,15 @@ public class AddBillFragment extends Fragment implements OnDateSetListener {
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         Calendar c = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         date = c.getTime();
-        button_add_bill_pickdate.setText(date.toString());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        button_add_bill_pickdate.setText(dateFormat.format(date));
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        Calendar c = new GregorianCalendar(0, 0, 0, hourOfDay, minute, second);
+        time = c.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        button_add_bill_picktime.setText(dateFormat.format(time));
     }
 }

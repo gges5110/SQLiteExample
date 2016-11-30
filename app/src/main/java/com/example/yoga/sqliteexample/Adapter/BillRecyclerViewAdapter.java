@@ -1,6 +1,7 @@
 package com.example.yoga.sqliteexample.Adapter;
 
 import android.app.Activity;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 
 /**
@@ -29,6 +31,7 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
     private List<String> placeList, dateList;
     private List<Person> payerList;
     private Activity activity;
+    private int[] colorArr = new int[4];
 
 
     public interface BillRecyclerInterface {
@@ -50,6 +53,11 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
             placeList.add(b.getPlace());
             dateList.add(dateFormat.format(b.getDate()));
         }
+
+        colorArr[0] = activity.getResources().getColor(R.color.roundedLetter1);
+        colorArr[1] = activity.getResources().getColor(R.color.roundedLetter2);
+        colorArr[2] = activity.getResources().getColor(R.color.roundedLetter3);
+        colorArr[3] = activity.getResources().getColor(R.color.roundedLetter4);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -107,8 +115,14 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(BillRecyclerViewAdapter.ViewHolder holder, int position) {
-        char c = Character.toUpperCase(placeList.get(position).charAt(0));
-        holder.mTitle.setText(String.valueOf(c));
+        if (!placeList.get(position).equals("")) {
+            char c = Character.toUpperCase(placeList.get(position).charAt(0));
+            holder.mTitle.setText(String.valueOf(c));
+
+            holder.mTitle.setBackgroundResource(R.drawable.circle);
+            GradientDrawable drawable = (GradientDrawable) holder.mTitle.getBackground();
+            drawable.setColor(colorArr[Character.getNumericValue(c) % 4]);
+        }
 
         holder.textView_line1.setText(placeList.get(position));
         holder.textView_line2.setText(dateList.get(position));

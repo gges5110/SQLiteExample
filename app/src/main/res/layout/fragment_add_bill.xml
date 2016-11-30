@@ -23,11 +23,26 @@
         android:ems="10"
         android:id="@+id/editText_add_bill" />
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pick a date"
-        android:id="@+id/button_add_bill_pickdate" />
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pick a date"
+            android:id="@+id/button_add_bill_pickdate" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pick a time"
+            android:id="@+id/button_add_bill_picktime" />
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
