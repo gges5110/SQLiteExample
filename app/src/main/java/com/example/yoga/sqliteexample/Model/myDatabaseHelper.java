@@ -38,7 +38,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "MyDatabase.db";
-
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     /*
     CREATE TABLE person_table (
@@ -252,8 +252,6 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
     public long createBill(Bill bill) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
         ContentValues values = new ContentValues();
         values.put(Bill.BillEntry.COLUMN_NAME_DATE, dateFormat.format(bill.getDate()));
@@ -261,6 +259,19 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
         values.put(Bill.BillEntry.COLUMN_NAME_PAYER, bill.getPayer());
 
         return db.insert(Bill.BillEntry.TABLE_NAME, null, values);
+    }
+
+    public long editBill(Bill bill) {
+        Log.d(LOG, "editBill with id = " + String.valueOf(bill.getId()));
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Bill.BillEntry.COLUMN_NAME_DATE, dateFormat.format(bill.getDate()));
+        values.put(Bill.BillEntry.COLUMN_NAME_PLACE, bill.getPlace());
+        values.put(Bill.BillEntry.COLUMN_NAME_PAYER, bill.getPayer());
+
+        String strFilter = Bill.BillEntry._ID + " = " + String.valueOf(bill.getId());
+        return db.update(Bill.BillEntry.TABLE_NAME, values, strFilter, null);
     }
 
     public List<Bill> getAllBills() {
@@ -279,10 +290,9 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
                 b.setPayer(c.getInt(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_PAYER)));
                 b.setPlace(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_PLACE)));
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
                 Date dt; //replace 4 with the column index
                 try {
-                    dt = sdf.parse(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_DATE)));
+                    dt = dateFormat.parse(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_DATE)));
                     b.setDate(dt);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -304,5 +314,6 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
         return db.insert(Item.ItemEntry.TABLE_NAME, null, values);
     }
+
 
 }

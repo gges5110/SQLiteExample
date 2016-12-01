@@ -27,7 +27,8 @@ public class MainPage extends AppCompatActivity
                     ListPersonFragment.ListPersonInterface,
                     AddBillFragment.AddBillInterface,
                     ListBillFragment.ListBillInterface,
-                    BillRecyclerViewAdapter.BillRecyclerInterface {
+                    BillRecyclerViewAdapter.BillRecyclerInterface,
+                    BillDetailFragment.BillDetailFragmentInterface {
 
     private static final String TAG = "MainPage";
     // Database Helper
@@ -212,6 +213,11 @@ public class MainPage extends AppCompatActivity
     }
 
     @Override
+    public long editBill(Bill bill) {
+        return db.editBill(bill);
+    }
+
+    @Override
     public List<Bill> getAllBills() {
         return db.getAllBills();
     }
@@ -233,6 +239,21 @@ public class MainPage extends AppCompatActivity
 
         actionBar.setTitle("Bill Details");
         displayHomeIcon(false);
+    }
+
+    @Override
+    public void setEditBillFragment(Bill bill, Person payer) {
+        AddBillFragment addBillFragment = new AddBillFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.content_frame, addBillFragment);
+        ft.addToBackStack("Bill Details");
+        ft.commit();
+        getFragmentManager().executePendingTransactions();
+
+        actionBar.setTitle("Edit Bill");
+        displayHomeIcon(false);
+        addBillFragment.setBill(bill, payer);
     }
 
     private void setAddBillFragment() {

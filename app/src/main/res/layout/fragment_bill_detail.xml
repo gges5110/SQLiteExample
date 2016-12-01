@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:text="Place: "
             android:layout_width="80sp"
@@ -20,10 +21,11 @@
             android:textSize="16sp" />
         <TextView
             android:text="Place"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:id="@+id/bill_detail_textView_place" />
+            android:id="@+id/bill_detail_textView_place"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -38,10 +40,11 @@
             android:id="@+id/textView2" />
         <TextView
             android:text="Date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:id="@+id/bill_detail_textView_date" />
+            android:id="@+id/bill_detail_textView_date"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -56,10 +59,11 @@
             android:id="@+id/textView4" />
         <TextView
             android:text="Payer"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:id="@+id/bill_detail_textView_payer" />
+            android:id="@+id/bill_detail_textView_payer"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 
@@ -72,9 +76,23 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <Button
-        android:text="Add Item"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bill_detail_button" />
+        android:orientation="horizontal">
+        <Button
+            android:text="Add Item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/bill_detail_add_button" />
+
+        <Button
+            android:text="Edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/bill_detail_edit_button" />
+    </LinearLayout>
+
 </LinearLayout>

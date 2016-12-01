@@ -35,16 +35,28 @@ import java.util.Locale;
  * Created by YOGA on 11/6/2016.
  */
 public class AddBillFragment extends Fragment implements OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    Spinner spinner_add_bill;
-    Button button_add_bill_pickdate, button_add_bill_add, button_add_bill_picktime;
-    EditText editText_add_bill;
+    private Spinner spinner_add_bill;
+    private Button button_add_bill_pickdate, button_add_bill_add, button_add_bill_picktime;
+    private EditText editText_add_bill;
     private Date date = null, time = null;
-    List<Person> personList;
-    int payer_id = -1;
+    private List<Person> personList;
+    private int payer_id = -1, bill_id = -1;
+
+    public void setBill(Bill bill, Person payer) {
+        this.date = bill.getDate();
+        this.time = bill.getDate();
+        setPickDate(date);
+        setPickTime(time);
+        button_add_bill_add.setText("Edit Bill");
+        editText_add_bill.setText(bill.getPlace());
+        spinner_add_bill.setSelection(personList.indexOf(payer));
+        bill_id = bill.getId();
+    }
 
     public interface AddBillInterface {
         List<Person> getAllPeople();
         long createBill(Bill bill);
+        long editBill(Bill bill);
     }
 
     AddBillInterface mListener;
@@ -134,10 +146,8 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
             @Override
             public void onClick(View v) {
                 // Check if no view has focus:
-                if (myView != null) {
-                    InputMethodManager imm = (InputMethodManager) myView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(myView.getWindowToken(), 0);
-                }
+                InputMethodManager imm = (InputMethodManager) myView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(myView.getWindowToken(), 0);
 
                 if (date == null || time == null || payer_id == -1 || editText_add_bill.getText().toString().equals("")) {
                     Toast.makeText(myView.getContext(), "Please select date and payer.", Toast.LENGTH_SHORT).show();
@@ -149,12 +159,21 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
                     date.setSeconds(time.getSeconds());
                     bill.setDate(date);
                     bill.setPayer(payer_id);
-                    if(mListener.createBill(bill) == -1) {
-                        Toast.makeText(myView.getContext(), "Error occurred when inserting into database.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(myView.getContext(), "Bill added.", Toast.LENGTH_SHORT).show();
-                    }
+                    bill.setId(bill_id);
 
+                    if (bill_id == -1) {
+                        if(mListener.createBill(bill) == -1) {
+                            Toast.makeText(myView.getContext(), "Error occurred when inserting into database.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(myView.getContext(), "Bill added.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if(mListener.editBill(bill) == -1) {
+                            Toast.makeText(myView.getContext(), "Error occurred when inserting into database.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(myView.getContext(), "Bill edited.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });
@@ -162,19 +181,29 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
         return myView;
     }
 
+    private void setPickDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        button_add_bill_pickdate.setText(dateFormat.format(date));
+    }
+
+    private void setPickTime(Date time) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        button_add_bill_picktime.setText(dateFormat.format(time));
+    }
+
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         Calendar c = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         date = c.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        button_add_bill_pickdate.setText(dateFormat.format(date));
+        setPickDate(date);
     }
 
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
         Calendar c = new GregorianCalendar(0, 0, 0, hourOfDay, minute, second);
         time = c.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        button_add_bill_picktime.setText(dateFormat.format(time));
+        setPickTime(time);
     }
+
+
 }
