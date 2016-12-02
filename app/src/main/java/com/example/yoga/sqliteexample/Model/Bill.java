@@ -1,7 +1,5 @@
 package com.example.yoga.sqliteexample.Model;
 
-import android.provider.BaseColumns;
-
 import java.util.Date;
 
 /**

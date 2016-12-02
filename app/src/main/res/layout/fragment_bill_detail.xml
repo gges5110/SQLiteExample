@@ -81,18 +81,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
-            android:text="Add Item"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/bill_detail_add_button" />
-
-        <Button
             android:text="Edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/bill_detail_edit_button" />
+
+        <Button
+            android:text="Add Item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/bill_detail_add_button"
+            android:clickable="false"
+            android:visibility="invisible" />
+
+
     </LinearLayout>
 
 </LinearLayout>

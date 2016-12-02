@@ -286,6 +286,17 @@ public class MainPage extends AppCompatActivity
         displayHomeIcon(false);
     }
 
+    private void setAddItemFragment() {
+        AddItemFragment addItemFragment = new AddItemFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, addItemFragment);
+        ft.addToBackStack("Bill Details");
+        ft.commit();
+
+        actionBar.setTitle("Add Item");
+        displayHomeIcon(false);
+    }
+
     public void floatingActionButtonOnClick(View view) {
         Log.d(TAG, "floatingActionButtonOnClick");
         Log.d(TAG, "getDisplayHomeIcon() = " + String.valueOf(getDisplayHomeIcon()));
@@ -301,7 +312,12 @@ public class MainPage extends AppCompatActivity
             Log.d(TAG, "ListPersonFragment");
             // Replace current fragment with AddPersonFragment
             setAddPersonFragment();
+        } else if (f instanceof BillDetailFragment) {
+            Log.d(TAG, "BillDetailFragment");
+            setAddItemFragment();
         }
 
     }
+
+
 }

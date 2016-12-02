@@ -2,8 +2,6 @@ package com.example.yoga.sqliteexample.Model;
 
 import android.provider.BaseColumns;
 
-import java.text.SimpleDateFormat;
-
 /**
  * Created by YOGA on 11/6/2016.
  */

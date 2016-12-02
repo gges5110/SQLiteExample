@@ -16,10 +16,8 @@ import com.example.yoga.sqliteexample.Model.Bill;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by YOGA on 11/7/2016.

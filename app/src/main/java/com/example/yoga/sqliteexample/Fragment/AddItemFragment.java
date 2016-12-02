@@ -14,10 +14,6 @@ import com.example.yoga.sqliteexample.R;
 public class AddItemFragment extends Fragment {
 
 
-
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -1,7 +1,5 @@
 package com.example.yoga.sqliteexample.Model;
 
-import android.provider.BaseColumns;
-
 /**
  * Created by YOGA on 11/5/2016.
  */

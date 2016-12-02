@@ -51,6 +51,7 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
         long editBill(Bill bill);
         Person getPerson(long person_id);
         Bill getBill(long bill_id);
+        void setBillDetailFragment(int bill_id);
         void popFragmentStack();
     }
 
@@ -177,10 +178,13 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
 
 
                     if (bill_id == -1) {
-                        if(mListener.createBill(bill) == -1) {
+                        bill_id = (int) mListener.createBill(bill);
+                        if(bill_id == -1) {
                             Snackbar.make(v, databaseInsertErrorString, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         } else {
                             Snackbar.make(v, "Bill added.", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                            mListener.popFragmentStack();
+                            mListener.setBillDetailFragment(bill_id);
                         }
                     } else {
                         if(mListener.editBill(bill) == -1) {

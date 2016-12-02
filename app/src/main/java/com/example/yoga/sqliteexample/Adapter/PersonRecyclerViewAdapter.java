@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
-
 
 import java.util.List;
 
