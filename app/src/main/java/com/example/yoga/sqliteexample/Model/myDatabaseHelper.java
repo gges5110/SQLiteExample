@@ -239,14 +239,37 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + Person.PersonEntry._ID + " = " + String.valueOf(person_id);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
-        if (c != null)
+        if (c != null) {
             c.moveToFirst();
+        }
 
         p.setEmail(c.getString(c.getColumnIndex(Person.PersonEntry.COLUMN_NAME_EMAIL)));
         p.setName(c.getString(c.getColumnIndex(Person.PersonEntry.COLUMN_NAME_NAME)));
         p.setId(c.getInt(c.getColumnIndex(Person.PersonEntry._ID)));
 
         return p;
+    }
+
+    public Bill getBill(long bill_id) {
+        Bill bill = new Bill();
+        String selectQuery = "SELECT * FROM " + Bill.BillEntry.TABLE_NAME +
+                " WHERE " + Bill.BillEntry._ID + " = " + String.valueOf(bill_id);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+
+        bill.setPlace(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_PLACE)));
+        bill.setPayer(c.getInt(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_PAYER)));
+
+        try {
+            bill.setDate(dateFormat.parse(c.getString(c.getColumnIndex(Bill.BillEntry.COLUMN_NAME_DATE))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return bill;
     }
 
     public long createBill(Bill bill) {
@@ -314,6 +337,7 @@ public class myDatabaseHelper extends SQLiteOpenHelper {
 
         return db.insert(Item.ItemEntry.TABLE_NAME, null, values);
     }
+
 
 
 }

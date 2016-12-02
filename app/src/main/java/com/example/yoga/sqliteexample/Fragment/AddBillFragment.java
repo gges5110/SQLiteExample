@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,38 +42,51 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
     private Date date = null, time = null;
     private List<Person> personList;
     private int payer_id = -1, bill_id = -1;
-
-    public void setBill(Bill bill, Person payer) {
-        this.date = bill.getDate();
-        this.time = bill.getDate();
-        setPickDate(date);
-        setPickTime(time);
-        button_add_bill_add.setText("Edit Bill");
-        editText_add_bill.setText(bill.getPlace());
-        spinner_add_bill.setSelection(personList.indexOf(payer));
-        bill_id = bill.getId();
-    }
+    private final String databaseInsertErrorString = "Error occurred when inserting into database.";
+    private AddBillInterface mListener;
 
     public interface AddBillInterface {
         List<Person> getAllPeople();
         long createBill(Bill bill);
         long editBill(Bill bill);
+        Person getPerson(long person_id);
+        Bill getBill(long bill_id);
+        void popFragmentStack();
     }
 
-    AddBillInterface mListener;
+    public void setBill(int bill_id) {
+        this.bill_id = bill_id;
+
+        if (mListener != null) {
+            Bill bill = mListener.getBill(bill_id);
+            Person payer = mListener.getPerson(bill.getPayer());
+
+            this.date = bill.getDate();
+            this.time = bill.getDate();
+
+            setPickDate(date);
+            setPickTime(time);
+
+            button_add_bill_add.setText("Edit Bill");
+            editText_add_bill.setText(bill.getPlace());
+            spinner_add_bill.setSelection(personList.indexOf(payer));
+        }
+
+        this.bill_id = bill_id;
+    }
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Activity activity;
 
         if (context instanceof Activity){
-            activity = (Activity) context;
+            Activity activity = (Activity) context;
             try {
                 mListener = (AddBillInterface) activity;
             } catch (ClassCastException e) {
                 throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
             }
-
         } else {
             throw new ClassCastException(context.toString() + " not an instance of activity.");
         }
@@ -161,17 +175,19 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
                     bill.setPayer(payer_id);
                     bill.setId(bill_id);
 
+
                     if (bill_id == -1) {
                         if(mListener.createBill(bill) == -1) {
-                            Toast.makeText(myView.getContext(), "Error occurred when inserting into database.", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(v, databaseInsertErrorString, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         } else {
-                            Toast.makeText(myView.getContext(), "Bill added.", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(v, "Bill added.", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         }
                     } else {
                         if(mListener.editBill(bill) == -1) {
-                            Toast.makeText(myView.getContext(), "Error occurred when inserting into database.", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(v, databaseInsertErrorString, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         } else {
-                            Toast.makeText(myView.getContext(), "Bill edited.", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(v, "Bill edited.", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                            mListener.popFragmentStack();
                         }
                     }
                 }

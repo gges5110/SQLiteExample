@@ -130,8 +130,9 @@ public class MainPage extends AppCompatActivity
         }
     }
 
-    private void popFragmentStack() {
-        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    @Override
+    public void popFragmentStack() {
+        getFragmentManager().popBackStack();
         String tag = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1).getName();
         actionBar.setTitle(tag);
         getFragmentManager().executePendingTransactions();
@@ -208,6 +209,11 @@ public class MainPage extends AppCompatActivity
     }
 
     @Override
+    public Bill getBill(long bill_id) {
+        return db.getBill(bill_id);
+    }
+
+    @Override
     public long createBill(Bill bill) {
         return db.createBill(bill);
     }
@@ -228,21 +234,21 @@ public class MainPage extends AppCompatActivity
     }
 
     @Override
-    public void setBillDetailFragment(Bill bill, Person payer) {
+    public void setBillDetailFragment(int bill_id) {
         BillDetailFragment billDetailFragment = new BillDetailFragment();
-        billDetailFragment.setBill(bill);
-        billDetailFragment.setPayer(payer);
+        billDetailFragment.setBill_id(bill_id);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, billDetailFragment);
-        ft.addToBackStack("List Bill");
+        ft.addToBackStack("Bill Details");
         ft.commit();
 
         actionBar.setTitle("Bill Details");
         displayHomeIcon(false);
+        printFragmentStackName();
     }
 
     @Override
-    public void setEditBillFragment(Bill bill, Person payer) {
+    public void setEditBillFragment(int bill_id) {
         AddBillFragment addBillFragment = new AddBillFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -253,7 +259,8 @@ public class MainPage extends AppCompatActivity
 
         actionBar.setTitle("Edit Bill");
         displayHomeIcon(false);
-        addBillFragment.setBill(bill, payer);
+        addBillFragment.setBill(bill_id);
+        printFragmentStackName();
     }
 
     private void setAddBillFragment() {
@@ -281,6 +288,8 @@ public class MainPage extends AppCompatActivity
 
     public void floatingActionButtonOnClick(View view) {
         Log.d(TAG, "floatingActionButtonOnClick");
+        Log.d(TAG, "getDisplayHomeIcon() = " + String.valueOf(getDisplayHomeIcon()));
+        printFragmentStackName();
         // Check which fragment it is in.
         Fragment f = getFragmentManager().findFragmentById(R.id.content_frame);
         if (f instanceof ListBillFragment) {

@@ -32,28 +32,23 @@ public class BillDetailFragment extends Fragment {
     public static final String TAG = "BillDetailFragment";
     private TextView bill_detail_textView_place, bill_detail_textView_date, bill_detail_textView_payer;
     private Button bill_detail_add_button, bill_detail_edit_button;
+    private int bill_id;
     private Bill bill;
     private Person payer;
 
+    public void setBill_id(int bill_id) {
+        this.bill_id = bill_id;
+    }
+
     public interface BillDetailFragmentInterface {
-        void setEditBillFragment(Bill bill, Person payer);
+        void setEditBillFragment(int bill_id);
+        Person getPerson(long person_id);
+        Bill getBill(long bill_id);
     }
-
-    public void setBill(Bill bill) {
-        this.bill = bill;
-    }
-    public void setPayer(Person payer) {
-        this.payer = payer;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "OnCreateView");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
         View myView = inflater.inflate(R.layout.fragment_bill_detail, container, false);
@@ -63,24 +58,37 @@ public class BillDetailFragment extends Fragment {
         bill_detail_add_button = (Button) myView.findViewById(R.id.bill_detail_add_button);
         bill_detail_edit_button = (Button) myView.findViewById(R.id.bill_detail_edit_button);
 
+        Activity activity = getActivity();
+        try {
+            BillDetailFragmentInterface mListener = (BillDetailFragmentInterface) activity;
+            bill = mListener.getBill(bill_id);
+            payer = mListener.getPerson(bill.getPayer());
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
+        }
+
+
         bill_detail_edit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 Activity activity = getActivity();
                 try {
                     BillDetailFragmentInterface mListener = (BillDetailFragmentInterface) activity;
-                    mListener.setEditBillFragment(bill, payer);
+                    mListener.setEditBillFragment(bill_id);
                 } catch (ClassCastException e) {
                     throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
                 }
             }
         });
 
-        bill_detail_textView_place.setText(bill.getPlace());
-        bill_detail_textView_date.setText(dateFormat.format(bill.getDate()));
-        bill_detail_textView_payer.setText(payer.getName());
+        if (bill != null) {
+            bill_detail_textView_place.setText(bill.getPlace());
+            bill_detail_textView_date.setText(dateFormat.format(bill.getDate()));
+        }
+
+        if (payer != null) {
+            bill_detail_textView_payer.setText(payer.getName());
+        }
 
         printFragmentStackName();
         return myView;
@@ -90,7 +98,6 @@ public class BillDetailFragment extends Fragment {
 
     private void printFragmentStackName() {
         FragmentManager fm = getFragmentManager();
-        Log.i(TAG, "Finding fragments.");
         int count = getFragmentManager().getBackStackEntryCount();
         Log.d(TAG, "back stack count = " + String.valueOf(count));
         for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){

@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.yoga.sqliteexample.Fragment.ListBillFragment;
 import com.example.yoga.sqliteexample.Model.Bill;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
@@ -19,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 
 /**
@@ -35,7 +32,7 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
 
 
     public interface BillRecyclerInterface {
-        void setBillDetailFragment(Bill bill, Person payer);
+        void setBillDetailFragment(int bill_id);
     }
 
     public BillRecyclerViewAdapter(Activity activity, List<Bill> billList, List<Person> payerList) {
@@ -91,7 +88,7 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
         @Override
         public void onClick(View v) {
             // Toast.makeText(activity, "Clicked", Toast.LENGTH_SHORT).show();
-            mListener.setBillDetailFragment(billList.get(getAdapterPosition()), payerList.get(getAdapterPosition()));
+            mListener.setBillDetailFragment(billList.get(getAdapterPosition()).getId());
         }
     }
 
