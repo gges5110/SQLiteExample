@@ -18,7 +18,8 @@ public final class Bill {
         this.payer = payer;
     }
 
-    public Bill() {}
+    public Bill() {
+    }
 
     public int getPayer() {
         return payer;

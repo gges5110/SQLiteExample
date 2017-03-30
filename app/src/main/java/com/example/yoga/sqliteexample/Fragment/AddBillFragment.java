@@ -47,11 +47,17 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
 
     public interface AddBillInterface {
         List<Person> getAllPeople();
+
         long createBill(Bill bill);
+
         long editBill(Bill bill);
+
         Person getPerson(long person_id);
+
         Bill getBill(long bill_id);
+
         void setBillDetailFragment(int bill_id);
+
         void popFragmentStack();
     }
 
@@ -59,6 +65,7 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
         this.bill_id = bill_id;
 
         if (mListener != null) {
+            // Edit bill
             Bill bill = mListener.getBill(bill_id);
             Person payer = mListener.getPerson(bill.getPayer());
 
@@ -81,7 +88,7 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             Activity activity = (Activity) context;
             try {
                 mListener = (AddBillInterface) activity;
@@ -178,8 +185,9 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
 
 
                     if (bill_id == -1) {
+                        // Create a new bill.
                         bill_id = (int) mListener.createBill(bill);
-                        if(bill_id == -1) {
+                        if (bill_id == -1) {
                             Snackbar.make(v, databaseInsertErrorString, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         } else {
                             Snackbar.make(v, "Bill added.", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -187,7 +195,8 @@ public class AddBillFragment extends Fragment implements OnDateSetListener, Time
                             mListener.setBillDetailFragment(bill_id);
                         }
                     } else {
-                        if(mListener.editBill(bill) == -1) {
+                        // Edit an old bill.
+                        if (mListener.editBill(bill) == -1) {
                             Snackbar.make(v, databaseInsertErrorString, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         } else {
                             Snackbar.make(v, "Bill edited.", Snackbar.LENGTH_SHORT).setAction("Action", null).show();

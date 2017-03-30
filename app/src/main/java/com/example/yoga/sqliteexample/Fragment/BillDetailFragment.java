@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.yoga.sqliteexample.Adapter.ItemRecyclerViewAdapter;
 import com.example.yoga.sqliteexample.Model.Bill;
+import com.example.yoga.sqliteexample.Model.Item;
 import com.example.yoga.sqliteexample.Model.Person;
 import com.example.yoga.sqliteexample.R;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -27,9 +32,13 @@ public class BillDetailFragment extends Fragment {
     public static final String TAG = "BillDetailFragment";
     private TextView bill_detail_textView_place, bill_detail_textView_date, bill_detail_textView_payer;
     private Button bill_detail_add_button, bill_detail_edit_button;
-    private int bill_id;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    public static int bill_id;
     private Bill bill;
     private Person payer;
+    private List<Item> itemList;
+    private LinearLayoutManager mLayoutManager;
 
     public void setBill_id(int bill_id) {
         this.bill_id = bill_id;
@@ -37,8 +46,12 @@ public class BillDetailFragment extends Fragment {
 
     public interface BillDetailFragmentInterface {
         void setEditBillFragment(int bill_id);
+
         Person getPerson(long person_id);
+
         Bill getBill(long bill_id);
+
+        List<Item> getItemsByBill(long bill_id);
     }
 
     @Override
@@ -59,10 +72,10 @@ public class BillDetailFragment extends Fragment {
             Log.d(TAG, "Bill Id = " + String.valueOf(bill_id));
             bill = mListener.getBill(bill_id);
             payer = mListener.getPerson(bill.getPayer());
+            itemList = mListener.getItemsByBill(bill_id);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
-
 
         bill_detail_edit_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +89,17 @@ public class BillDetailFragment extends Fragment {
                 }
             }
         });
+
+        // TODO display Items
+        if (itemList != null) {
+            Log.d(TAG, "Display itemList with size of " + String.valueOf(itemList.size()));
+            mRecyclerView = (RecyclerView) myView.findViewById(R.id.bill_detail_recyclerView);
+            mLayoutManager = new LinearLayoutManager(myView.getContext());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+
+            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList);
+            mRecyclerView.setAdapter(mAdapter);
+        }
 
         if (bill != null) {
             bill_detail_textView_place.setText(bill.getPlace());
@@ -91,12 +115,11 @@ public class BillDetailFragment extends Fragment {
     }
 
 
-
     private void printFragmentStackName() {
         FragmentManager fm = getFragmentManager();
         int count = getFragmentManager().getBackStackEntryCount();
         Log.d(TAG, "back stack count = " + String.valueOf(count));
-        for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
+        for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
             Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getName());
         }
     }

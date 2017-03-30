@@ -5,6 +5,34 @@ package com.example.yoga.sqliteexample.Model;
  */
 
 public final class BillItem {
+    private int id, item_id, bill_id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(int item_id) {
+        this.item_id = item_id;
+    }
+
+    public int getBill_id() {
+        return bill_id;
+    }
+
+    public void setBill_id(int bill_id) {
+        this.bill_id = bill_id;
+    }
+
+    public BillItem() {
+    }
 
     public static class BillItemEntry {
         public static final String TABLE_NAME = "bill_item_table";

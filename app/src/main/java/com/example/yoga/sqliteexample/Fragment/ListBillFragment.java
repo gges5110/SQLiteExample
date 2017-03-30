@@ -30,6 +30,7 @@ public class ListBillFragment extends Fragment {
 
     public interface ListBillInterface {
         List<Bill> getAllBills();
+
         Person getPerson(long person_id);
     }
 
@@ -40,7 +41,7 @@ public class ListBillFragment extends Fragment {
         super.onAttach(context);
         Activity activity;
 
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             activity = (Activity) context;
             try {
                 mListener = (ListBillInterface) activity;
@@ -64,7 +65,7 @@ public class ListBillFragment extends Fragment {
         List<Person> personList = new ArrayList<>();
         List<Bill> billList = mListener.getAllBills();
 
-        for (Bill b: billList) {
+        for (Bill b : billList) {
             personList.add(mListener.getPerson(b.getPayer()));
         }
 

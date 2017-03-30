@@ -53,9 +53,10 @@ public class PersonRecyclerViewAdapter extends RecyclerView.Adapter<PersonRecycl
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         AppCompatActivity appCompatActivity;
         TextView person_listitem_textView_name, person_listitem_textView_email;
+
         public ViewHolder(LinearLayout itemView, Activity activity) {
             super(itemView);
-            if (activity instanceof  AppCompatActivity) {
+            if (activity instanceof AppCompatActivity) {
                 this.appCompatActivity = (AppCompatActivity) activity;
             }
 

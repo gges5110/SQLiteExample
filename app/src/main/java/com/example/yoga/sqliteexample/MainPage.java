@@ -22,13 +22,14 @@ import com.example.yoga.sqliteexample.Model.*;
 import java.util.List;
 
 public class MainPage extends AppCompatActivity
-        implements  NavigationView.OnNavigationItemSelectedListener,
-                    AddPersonFragment.AddPersonInterface,
-                    ListPersonFragment.ListPersonInterface,
-                    AddBillFragment.AddBillInterface,
-                    ListBillFragment.ListBillInterface,
-                    BillRecyclerViewAdapter.BillRecyclerInterface,
-                    BillDetailFragment.BillDetailFragmentInterface {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        AddPersonFragment.AddPersonInterface,
+        AddBillFragment.AddBillInterface,
+        AddItemFragment.AddItemInterface,
+        ListBillFragment.ListBillInterface,
+        ListPersonFragment.ListPersonInterface,
+        BillRecyclerViewAdapter.BillRecyclerInterface,
+        BillDetailFragment.BillDetailFragmentInterface {
 
     private static final String TAG = "MainPage";
     // Database Helper
@@ -71,7 +72,7 @@ public class MainPage extends AppCompatActivity
         int count = getFragmentManager().getBackStackEntryCount();
         Log.d(TAG, "back stack count = " + String.valueOf(count));
 
-        for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
+        for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
             Log.i("TAG", "Found fragment" + String.valueOf(entry) + ": " + fm.getBackStackEntryAt(entry).getName());
         }
     }
@@ -214,6 +215,11 @@ public class MainPage extends AppCompatActivity
     }
 
     @Override
+    public List<Item> getItemsByBill(long bill_id) {
+        return db.getItemsByBill(bill_id);
+    }
+
+    @Override
     public long createBill(Bill bill) {
         return db.createBill(bill);
     }
@@ -228,9 +234,19 @@ public class MainPage extends AppCompatActivity
         return db.getAllBills();
     }
 
-    //@Override
+    @Override
     public long createItem(Item item) {
         return db.createItem(item);
+    }
+
+    @Override
+    public long editItem(Item item) {
+        return db.editItem(item);
+    }
+
+    @Override
+    public long createBillItem(BillItem billItem) {
+        return db.createBillItem(billItem);
     }
 
     @Override
@@ -286,8 +302,9 @@ public class MainPage extends AppCompatActivity
         displayHomeIcon(false);
     }
 
-    private void setAddItemFragment() {
+    private void setAddItemFragment(int bill_id) {
         AddItemFragment addItemFragment = new AddItemFragment();
+        addItemFragment.setBillID(bill_id);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, addItemFragment);
         ft.addToBackStack("Bill Details");
@@ -314,7 +331,7 @@ public class MainPage extends AppCompatActivity
             setAddPersonFragment();
         } else if (f instanceof BillDetailFragment) {
             Log.d(TAG, "BillDetailFragment");
-            setAddItemFragment();
+            setAddItemFragment(BillDetailFragment.bill_id);
         }
 
     }

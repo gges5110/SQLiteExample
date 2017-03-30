@@ -16,7 +16,8 @@ public final class Item {
         this.itemName = itemName;
     }
 
-    public Item() {}
+    public Item() {
+    }
 
 
     public String getItemName() {

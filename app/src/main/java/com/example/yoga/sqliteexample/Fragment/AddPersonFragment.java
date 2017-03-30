@@ -29,12 +29,13 @@ public class AddPersonFragment extends Fragment {
     }
 
     AddPersonInterface mListener;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Activity activity;
 
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             activity = (Activity) context;
             try {
                 mListener = (AddPersonInterface) activity;

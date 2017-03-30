@@ -93,15 +93,13 @@ public class BillRecyclerViewAdapter extends RecyclerView.Adapter<BillRecyclerVi
     }
 
 
-
     @Override
     public BillRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listview_layout, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder((LinearLayout) v, activity, billList, payerList);
-        return vh;
+        // set the view's size, margins, padding and layout parameters
+        return new ViewHolder((LinearLayout) v, activity, billList, payerList);
     }
 
     @Override
