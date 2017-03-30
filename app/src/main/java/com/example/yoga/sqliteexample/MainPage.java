@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.yoga.sqliteexample.Adapter.BillRecyclerViewAdapter;
 import com.example.yoga.sqliteexample.Fragment.*;
@@ -255,7 +256,7 @@ public class MainPage extends AppCompatActivity
         billDetailFragment.setBill_id(bill_id);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, billDetailFragment);
-        ft.addToBackStack("Bill Details");
+        ft.addToBackStack("List Bill");
         ft.commit();
 
         actionBar.setTitle("Bill Details");
@@ -332,6 +333,8 @@ public class MainPage extends AppCompatActivity
         } else if (f instanceof BillDetailFragment) {
             Log.d(TAG, "BillDetailFragment");
             setAddItemFragment(BillDetailFragment.bill_id);
+        } else {
+            Toast.makeText(this, "Cannot add anything here!", Toast.LENGTH_SHORT).show();
         }
 
     }

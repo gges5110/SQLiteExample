@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import com.example.yoga.sqliteexample.R;
 public class AddPersonFragment extends Fragment {
     Button button_add_person_add;
     EditText editText_add_person_name, editText_add_person_email;
-    TextView textView_add_person_status;
+    Activity activity;
 
     public interface AddPersonInterface {
         long createPerson(Person p);
@@ -33,7 +34,7 @@ public class AddPersonFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Activity activity;
+
 
         if (context instanceof Activity) {
             activity = (Activity) context;
@@ -57,7 +58,6 @@ public class AddPersonFragment extends Fragment {
         button_add_person_add = (Button) myView.findViewById(R.id.button_add_person_add);
         editText_add_person_email = (EditText) myView.findViewById(R.id.editText_add_person_email);
         editText_add_person_name = (EditText) myView.findViewById(R.id.editText_add_person_name);
-        textView_add_person_status = (TextView) myView.findViewById(R.id.textView_add_person_status);
 
         button_add_person_add.setOnClickListener(new OnClickListener() {
             @Override
@@ -68,10 +68,14 @@ public class AddPersonFragment extends Fragment {
                 Person p = new Person();
                 p.setName(editText_add_person_name.getText().toString());
                 p.setEmail(editText_add_person_email.getText().toString());
+                mListener.createPerson(p);
 
-                long status = mListener.createPerson(p);
-
-                textView_add_person_status.setText(String.valueOf(status));
+                // Check if no view has focus:
+                View view = activity.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         });
         return myView;
